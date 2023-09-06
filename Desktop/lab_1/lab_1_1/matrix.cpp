@@ -77,6 +77,8 @@ void Matrix::getRank(){
     cout << matrixRank;
 }
 
+
+// вычисление ранга
 number Matrix::rankSearch(number** matrix, int size){
     if (size == 2){
         number detForTwo = getDeterminantMatrixOfSizeTwo(matrix);
@@ -89,12 +91,15 @@ number Matrix::rankSearch(number** matrix, int size){
         }
         return detForTwo;
     }
+
     short sign = 1;
     number determinant = 0;
     for (int row = 0; row < size; row++){
         determinant = 0;
         for(int column = 0; column < size; column++){
+            // вычисление минора матрицы
             number** minor = findMinor(matrix, column, size - 1, row);
+            // обработка правильного знака для разложения по строке
             sign  = ((row + 1) + (column + 1)) % 2 == 0 ?  1 : -1;
             determinant = determinant + (sign * matrix[row][column]) * rankSearch(minor, size - 1);
         }

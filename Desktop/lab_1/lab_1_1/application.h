@@ -1,6 +1,5 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
-#include "matrix.h"
 
 class Application
 {

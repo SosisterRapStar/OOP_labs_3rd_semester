@@ -1,6 +1,7 @@
 #include "application.h"
 #include <iostream>
 #include <vector>
+#include "matrix.h"
 using namespace std;
 
 
@@ -26,6 +27,7 @@ void Application::menu(){
 
 int Application::exec()
 {
+    // не работает сетлокейл
     setlocale(LC_ALL, "rus");
     int ch = 0;
     Matrix matrix;

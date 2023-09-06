@@ -1,9 +1,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-#include <vector>
 #include "number.h"
 
-using namespace std;
+
 class Matrix
 {
 public:
