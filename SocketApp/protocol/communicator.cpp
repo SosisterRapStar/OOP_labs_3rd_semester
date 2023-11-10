@@ -8,10 +8,6 @@ Communicator::Communicator(connectionParams& pars, QObject *parent) : QUdpSocket
     if (ready) connect(this,SIGNAL(readyRead()),this,SLOT(recieve()));
 }
 
-bool Communicator::isReady()
-{
-    return ready;
-}
 
 void Communicator::send(QByteArray msg)     // отправка данных
 {

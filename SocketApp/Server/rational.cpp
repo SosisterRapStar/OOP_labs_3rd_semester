@@ -26,6 +26,28 @@ Rational::  Rational(const int& numerator, const int& denominator)
 
 }
 
+Rational Rational::operator/(Rational other)
+{
+    Rational t;
+    t.up = up * other.down;
+    t.down = down * other.up;
+    t.GCD();
+    return t;
+}
+
+Rational Rational::operator+=(Rational other)
+{
+
+    up = (up * other.down) + (other.up * down);
+    down = down * other.down;
+    GCD();
+    return *this;
+
+}
+
+Rational abs(const Rational& r) {
+    return Rational(abs(r.up), abs(r.down));
+}
 
 
 Rational   Rational::operator+(  Rational other)

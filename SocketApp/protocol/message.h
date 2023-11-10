@@ -31,7 +31,6 @@ public:
     int method;
     QString body;
     QByteArray toQByteArray();
-    QString fromQByteArray(QByteArray& arr);
 
 };
 

@@ -1,5 +1,5 @@
 #include "serverapp.h"
-#include "matrix.h"
+#include "squarematrix.h"
 #include "message.h"
 
 ServerApp::ServerApp(int argc, char *argv[])
@@ -20,7 +20,7 @@ void ServerApp::recieve(QByteArray message)
     {
 
         number** matrixArr = parseMatrixBody(msg.body);
-        Matrix* matrix = new Matrix(size);
+        SquareMatrix* matrix = new SquareMatrix(size);
         matrix->setMatrixByArray(matrixArr);
         int rank = matrix->getRank();
         delete matrix;
@@ -36,7 +36,7 @@ void ServerApp::recieve(QByteArray message)
     case DETERMINANT:
     {
         number** matrixArr = parseMatrixBody(msg.body);
-        Matrix* matrix = new Matrix(size);
+        SquareMatrix* matrix = new SquareMatrix(size);
         matrix->setMatrixByArray(matrixArr);
         number det = matrix->getDet();
         delete matrix;

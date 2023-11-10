@@ -18,7 +18,8 @@ SOURCES += \
     main.cpp \
     matrix.cpp \
     rational.cpp \
-    serverapp.cpp
+    serverapp.cpp \
+    squarematrix.cpp
 
 HEADERS += \
     ../protocol/communicator.h \
@@ -28,7 +29,8 @@ HEADERS += \
     matrix.h \
     number.h \
     rational.h \
-    serverapp.h
+    serverapp.h \
+    squarematrix.h
 
 FORMS +=
 

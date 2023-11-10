@@ -23,10 +23,12 @@ public:
     bool operator != (double);
     bool operator==(Rational);
     bool operator==(double);
+    Rational operator/ (Rational);
+    Rational operator+= (Rational);
     friend ostream& operator <<(ostream&, Rational);
     friend istream& operator >>(istream&, Rational&);
-
     friend QString& operator <<(QString&, Rational);
+    friend Rational abs(const Rational& r);
 
 };
 

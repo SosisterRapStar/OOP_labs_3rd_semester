@@ -1,32 +1,12 @@
 #include "matrix.h"
 #include <iostream>
-#include <iomanip>
 #include "number.h"
 using namespace std;
 
-Matrix::Matrix()
-{
-    matrixRank = 1;
-    matrixSize = 5;
-    matrix = new number * [matrixSize];
-    // инициализация изначального массива
-    for (int i = 0; i < matrixSize; i++) {
-        matrix[i] = new number[matrixSize];
-    }
-
-    // создание дефолтной матрицы
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            matrix[row][column] = 1;
-        }
-    }
-}
 
 
-
-Matrix::~Matrix(){ //добавлен деструктор для матрицы
-
-    for (int i = 0; i < matrixSize; i++) {
+Matrix::~Matrix() {
+    for (int i = 0; i < row; i++) {
         delete[] matrix[i];
     }
     delete[] matrix;
@@ -34,225 +14,168 @@ Matrix::~Matrix(){ //добавлен деструктор для матрицы
 
 }
 // создание стандартной матрицы по заданному размеру
-Matrix::Matrix(int size)
+Matrix::Matrix(int row, int column)
 {
-    matrixRank = 1;
-    matrixSize = size;
-    matrix = new number * [matrixSize];
+    this->row = row;
+    this->column = column;
+    matrix = new number * [row];
     // инициализация изначального массива
-    for (int i = 0; i < matrixSize; i++) {
-        matrix[i] = new number[matrixSize];
+    for (int i = 0; i < row; i++) {
+        matrix[i] = new number[column];
     }
 
     // создание дефолтной матрицы
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            matrix[row][column] = 1;
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            matrix[r][c] = 1;
         }
     }
 
 }
 
-
-
-
-
-// считает определитель матрицы второго порядка
-number Matrix::getDeterminantMatrixOfSizeTwo(number** matrix) {
-    return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
-}
-
-
 // транспонирование матрицы
 void Matrix::matrixTransporn() {
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            cout << matrix[column][row] << '\t';
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            cout << matrix[c][r] << '\t';
         }
         cout << '\n';
     }
 }
 
 
-
-
-
-
-
-
 // создает миноры матрицы для определителя
-number** Matrix::findMinor(number** matrix, int columnOriginMat, int size, int minorRow) {
-    //    cout << "\nCreatedMinor\n"; // промежуточный вывод
-    number** minor = new number * [size];
-    for (int i = 0; i < size; i++) {
-        minor[i] = new number[size];
-    }
-    int currentRowInMinor = 0;
-    for (int row = 0; row < size + 1; row++) {
-        if (minorRow != row) {
-            int currentColumnInMinor = 0;
-            for (int column = 0; column < size + 1; column++) {
-                if (column != columnOriginMat) {
-                    //                    cout << matrix[row][column] << "\t"; // промежуточный вывод
-                    minor[currentRowInMinor][currentColumnInMinor] = matrix[row][column];
-                    currentColumnInMinor += 1;
-                }
-            }
-            currentRowInMinor += 1;
-        }
 
-    }
-    return minor;
-}
 
 int Matrix::getRank() {
-    if (matrixSize == 1){
-        matrixRank = 1;
-    }
-    rankSearch(matrix, matrixSize);
-    cout << matrixRank;
-    return this->matrixRank;
+    return rank_by_gaussian_transformation();
 }
 
-
-void Matrix::deleteMatrix(number** matrix, int size) {
-    for (int i = 0; i < size; i++) {
+void Matrix::setMatrixByArray(number** valueArray){
+    for (int i = 0; i < row; i++) {
         delete[] matrix[i];
     }
     delete[] matrix;
+    matrix = new number* [row];
+    for(int i = 0; i < row; i++){
+        matrix[i] = new number [column];
+    }
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            matrix[r][c] = valueArray[r][c];
+        }
+    }
+}
+
+
+int Matrix::rank_by_gaussian_transformation() {
+    // создание копии матрицы
+    number** copy_matrix = new number * [row];
+
+    for (int i = 0; i < row; i++) {
+        copy_matrix[i] = new number[column];
+    }
+
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            copy_matrix[r][c] = matrix[r][c];
+        }
+    }
+
+
+    int row_step_counter = 0;// сдвиг по строкам
+    int col_step_counter = 0;// сдвиг по столбцам
+    bool skip_null_col = false; // является ли столбец нулевым и нужно ли его пропускать
+    for (int r = 0; r < row - 1 && col_step_counter < column; r += 1 ? !skip_null_col: 0){
+        skip_null_col = false;
+
+        if (copy_matrix[r][col_step_counter] == 0) {
+            int not_null_row = -1;
+            for (int r = row_step_counter; r < row; r++) {
+                if (copy_matrix[r][col_step_counter] != 0) {
+                    not_null_row = r;
+                    break;
+                }
+            }
+            if (not_null_row == -1) {
+                skip_null_col = true;
+                col_step_counter += 1;
+                continue;
+            }
+            else {
+
+                for (int c = 0; c < column; c++) {
+                    number swap_num = copy_matrix[r][c];
+                    copy_matrix[not_null_row][c] = copy_matrix[r][c];
+                    copy_matrix[not_null_row][c] = swap_num;
+                }
+            }
+
+        }
+        number first_el = copy_matrix[r][col_step_counter];
+        for (int i = r + 1; i < row; i++) {
+            number sign;
+            number curr_first;
+            if (copy_matrix[i][col_step_counter] != 0) {
+                sign = (copy_matrix[i][col_step_counter] / abs(copy_matrix[i][col_step_counter]));
+                curr_first = abs(copy_matrix[i][col_step_counter]);
+            }
+            else {
+                curr_first = 0;
+                sign = 0;
+            }
+            for (int j = col_step_counter; j < column; j++) {
+                copy_matrix[i][j] += sign * (-1) * (copy_matrix[r][j] / first_el) * curr_first;
+            }
+        }
+        row_step_counter += 1;
+        col_step_counter += 1;
+
+    }
+    number row_sum;
+    int rank = 0;
+    for (int r = 0; r < row; r++) {
+        row_sum = 0;
+        for (int c = 0; c < column; c++) {
+            cout << copy_matrix[r][c] << " ";
+            row_sum += copy_matrix[r][c];
+        }
+        if (row_sum != 0) {
+            rank += 1;
+        }
+        cout << '\n';
+    }
+
+    for (int i = 0; i < row; i++) {
+        delete[] copy_matrix[i];
+    }
+    delete[] copy_matrix;
+
+    return rank;
 }
 
 
 
-// вычисление ранга
-number Matrix::rankSearch(number** matrix, int size) {
-    if (size == 2) {
-        number detForTwo = getDeterminantMatrixOfSizeTwo(matrix);
-        if (size != matrixSize) {
-            deleteMatrix(matrix, size);
-        }
-        if (detForTwo != 0 and matrixRank < 2) {
-            matrixRank = 2;
-        }
-        return detForTwo;
-    }
 
-    number sign = 1;
-    number determinant = 0;
-    for (int row = 0; row < size; row++) {
-        determinant = 0;
-        for (int column = 0; column < size; column++) {
-            // вычисление минора матрицы
-            number** minor = findMinor(matrix, column, size - 1, row);
-            // обработка правильного знака для разложения по строке
-            sign = ((row + 1) + (column + 1)) % 2 == 0 ? 1 : -1;
-            determinant = determinant + (matrix[row][column] * sign) * rankSearch(minor, size - 1);
-        }
-        if (determinant != 0 and size > matrixRank) {
-            matrixRank = size;
-        }
-        if (matrixSize == matrixRank) {
-            return 0;
-        }
-    }
-    if (size != matrixSize) {
-        deleteMatrix(matrix, size);
-    }
-    return determinant;
-}
-
-
-
-//  функция нахождения определителя разложением по первой строке
-number Matrix::getDeterminant(number** matrix, int size) {
-    if (size == 2) {
-        number detForTwo = getDeterminantMatrixOfSizeTwo(matrix);
-        deleteMatrix(matrix, size);
-        return detForTwo;
-    }
-    number determinant = 0;
-    number sign = 1;
-    for (int i = 0; i < size; i++) {
-        number** minor = findMinor(matrix, i, size - 1, 0);
-        determinant = determinant + (matrix[0][i] * sign) * getDeterminant(minor, size - 1);
-        //        cout << fixed << setprecision(2) << determinant << '\n'; // промежуточный вывод
-        sign = -sign;
-    }
-    if (size != matrixSize) {
-        deleteMatrix(matrix, size);
-    }
-    return determinant;
-}
-
-
-
-// метод который вызывает приватный метод рекурсивного нахождения определителя
-number Matrix::getDet() {
-    if (matrixSize == 1) {
-        return matrix[0][0];
-    }
-    if (matrixSize == 2) {
-        return getDeterminantMatrixOfSizeTwo(matrix);
-    }
-    return getDeterminant(matrix, matrixSize);
-}
-
-
-// выводит матрицу на экран
 void Matrix::getMatrix() {
     cout << "|--|Matrix|--|\n";
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            cout << matrix[row][column];
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            cout << matrix[r][c];
             cout << "\t";
         }
         cout << '\n';
     }
 }
 
-
-// задает значение размера матрицы и проверяет валидность ввода
-bool Matrix::setMatrixSize(int& size) {
-
-    if (size <= 0) { // проверяет валиден ли ввод
-        return false; // ввод неправльный
-    }
-    deleteMatrix(matrix, matrixSize);
-    matrixSize = size; // задает размер для матрицы
-    return true; // всё прошло успешно
-
-}
-
-// добавлен дополнительный метод для связи с данными из QWidget
-void Matrix::setMatrixByArray(number** valueArray){
-    deleteMatrix(matrix, matrixSize);
-    matrix = new number* [matrixSize];
-    for(int i = 0; i < matrixSize; i++){
-        matrix[i] = new number [matrixSize];
-    }
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            matrix[row][column] = valueArray[row][column];
-        }
-    }
-}
-
-// создает пользовательскую матрицу
-bool Matrix::setUserMatrix(int size) {
-    if (!setMatrixSize(size)) {
-        return false;  // Если ввод не валиден, то прекращаем работу и даем ответ в виде false
-    }
-    matrix = new number * [matrixSize];
-    for (int i = 0; i < matrixSize; i++) {
-        matrix[i] = new number[matrixSize];
-    }
+bool Matrix::setUserMatrix() {
     cout << "Enter your matrix values\n\n";
     number value;
-    for (int row = 0; row < matrixSize; row++) {
-        for (int column = 0; column < matrixSize; column++) {
-            cout << "MatrixSymbol " << row + 1 << " " << column + 1 << " : ";
+    for (int r = 0; r < row; r++) {
+        for (int c = 0; c < column; c++) {
+            cout << "MatrixSymbol " << r + 1 << " " << c + 1 << " : ";
             cin >> value;
-            matrix[row][column] = value;
+            matrix[r][c] = value;
         }
         cout << "Row " << row + 1 << " filled\n\n";
     }
