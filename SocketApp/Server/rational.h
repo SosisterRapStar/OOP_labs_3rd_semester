@@ -5,7 +5,6 @@
 using namespace std;
 
 const QString RATIONAL_SEPARATOR("/");
-
 class Rational
 {
     int up, down;
@@ -13,6 +12,7 @@ class Rational
 public:
     Rational();
     Rational(const int&);
+    Rational(const QString&);
     Rational(const int& numerator, const int& denominator);
     void GCD();
     Rational operator+ (Rational);

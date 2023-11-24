@@ -15,20 +15,21 @@ INCLUDEPATH += ../protocol
 SOURCES += \
     ../protocol/communicator.cpp \
     ../protocol/message.cpp \
+    complex.cpp \
     main.cpp \
-    matrix.cpp \
     rational.cpp \
-    serverapp.cpp \
-    squarematrix.cpp
+    real.cpp \
+    serverapp.cpp
 
 HEADERS += \
     ../protocol/communicator.h \
     ../protocol/headers.h \
     ../protocol/message.h \
     ../protocol/methods.h \
+    complex.h \
     matrix.h \
-    number.h \
     rational.h \
+    real.h \
     serverapp.h \
     squarematrix.h
 

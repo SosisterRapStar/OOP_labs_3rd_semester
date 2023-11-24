@@ -1,5 +1,5 @@
 #include "rational.h"
-
+#include <QStringList>
 using namespace std;
 Rational::  Rational()
 {
@@ -12,6 +12,27 @@ Rational::  Rational(const int& real)
     up = real;
     down = 1;
 }
+
+Rational::Rational(const QString& str){
+    bool haveRationalView = false;
+    for(int i = 0; i < str.size(); i++){
+        if(str[i] == RATIONAL_SEPARATOR){
+            haveRationalView = true;
+            break;
+        }
+    }
+    if(haveRationalView){
+        QStringList strList = str.split(RATIONAL_SEPARATOR);
+        up = strList[0].toInt();
+        down = strList[1].toInt();
+    }
+    else{
+        up = str.toInt();
+        down = 1;
+    }
+
+}
+
 
 Rational::  Rational(const int& numerator, const int& denominator)
 {

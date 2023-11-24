@@ -5,6 +5,7 @@
 #include<QLabel>
 #include<QBoxLayout>
 #include"message.h"
+#include<QRadioButton>
 
 
 
@@ -20,6 +21,7 @@ Interface::Interface(QWidget *parent)
     answerEditLine->setReadOnly(true);
 
     matrixLayout = new QGridLayout();
+    type_layout = new QGridLayout();
     mainGridLayout = new QGridLayout();
     menuLayout = new QVBoxLayout();
 
@@ -42,14 +44,26 @@ Interface::Interface(QWidget *parent)
     menuLayout->addWidget(buttonTransponation);
     menuLayout->addWidget(buttonRank);
     menuLayout->addWidget(buttonDet);
-    menuLayout->addWidget(answerEditLine);
 
-    mainGridLayout->addLayout(matrixLayout, 0, 0);
-    mainGridLayout->addLayout(menuLayout, 1,0);
+
+    type_layout->addWidget(real_type, 0, 0);
+    type_layout->addWidget(complex_type, 0, 1);
+    rational_type->setChecked(true);
+    type_layout->addWidget(rational_type, 0, 2);
+
+    menuLayout->addWidget(answerEditLine);
+    mainGridLayout->addLayout(type_layout, 0, 0);
+    mainGridLayout->addLayout(matrixLayout, 1, 0);
+    mainGridLayout->addLayout(menuLayout, 2,0);
 
     this->setLayout(mainGridLayout);
 
     //CONNECTIONS:
+
+    connect(real_type, SIGNAL(clicked()), this, SLOT(change_view()));
+    connect(complex_type, SIGNAL(clicked()), this, SLOT(change_view()));
+    connect(rational_type, SIGNAL(clicked()), this, SLOT(change_view()));
+
     connect(sizeEditLine, SIGNAL(returnPressed()), this, SLOT(change_size()));
     connect(buttonDet, SIGNAL(pressed()), this, SLOT(makeRequest()));
     connect(buttonRank, SIGNAL(pressed()), this, SLOT(makeRequest()));
@@ -77,7 +91,7 @@ void Interface::change_size() {
 
         for (int i = 0; i < size; ++i) {
             for (int j = 0; j < size; ++j) {
-                cells[i][j].setText("1");
+                cells[i][j].setText(current_cell_type);
                 matrixLayout->addWidget(&cells[i][j], i , j);
             }
         }
@@ -102,16 +116,54 @@ void Interface::answer(Message msg){
     answerEditLine -> setText(ans);
 }
 
+int Interface::get_request_datatype(){
+    if (real_type->isChecked()){
+        return REAL;
+    }
+    else if(complex_type->isChecked()){
+        return COMPLEX;
+    }
+    else{
+        return RATIONAL;
+    }
+}
+
+
+void Interface::change_view(){
+    int type = get_request_datatype();
+    if (type == REAL || type == RATIONAL){
+        current_cell_type = "1";
+        for (int i = 0; i < size; ++i) {
+
+            for (int j = 0; j < size; ++j) {
+                cells[i][j].setText(current_cell_type);
+                matrixLayout->addWidget(&cells[i][j], i , j);
+
+            }
+        }
+    }
+    else{
+        current_cell_type = "1+0";
+        for (int i = 0; i < size; ++i) {
+
+            for (int j = 0; j < size; ++j) {
+                cells[i][j].setText(current_cell_type);
+                matrixLayout->addWidget(&cells[i][j], i , j);
+
+            }
+        }
+    }
+}
 
 void Interface::makeRequest(){
     // создание массива для хранения матрицы
     QPushButton *button = (QPushButton *)sender();
     if(button == buttonDet){
-        Message msg(REQUEST, DETERMINANT, formMatrixBody());
+        Message msg(REQUEST, DETERMINANT, get_request_datatype(), formMatrixBody());
         emit request(msg);
     }
     if(button == buttonRank){
-        Message msg(REQUEST, RANK, formMatrixBody());
+        Message msg(REQUEST, RANK, get_request_datatype(),formMatrixBody());
         emit request(msg);
     }
 }
@@ -138,6 +190,7 @@ Interface::~Interface(){
     delete mainGridLayout;
     delete matrixLayout;
     delete menuLayout;
+    delete type_layout;
     for (int i = 0; i < size; ++i) {
         delete[] cells[i];
     }

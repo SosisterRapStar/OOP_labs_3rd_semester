@@ -20,15 +20,23 @@ enum methods
     ANSWER,
 };
 
+enum types
+{
+    REAL = 1,
+    COMPLEX,
+    RATIONAL,
+};
+
 
 class Message
 {
 QString toString();
 public:
     Message(QByteArray);
-    Message(int header, int method, QString body);
+    Message(int header, int method, int type, QString body);
     int header;
     int method;
+    int type;
     QString body;
     QByteArray toQByteArray();
 

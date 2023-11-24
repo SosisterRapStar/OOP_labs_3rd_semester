@@ -4,12 +4,16 @@
 
 
 
-Message::Message(int header, int method, QString body)
+Message::Message(int header, int method, int type, QString body)
 {
     this->header = header;
     this->method = method;
+    this->type = type;
     this->body = body;
 }
+
+
+
 
 Message::Message(QByteArray arr)
 {
@@ -17,7 +21,8 @@ Message::Message(QByteArray arr)
     QStringList strList = str.split(SEPARATOR);
     header = strList[0].toInt();
     method = strList[1].toInt();
-    body = strList[2];
+    type = strList[2].toInt();
+    body = strList[3];
 
 }
 
@@ -29,7 +34,9 @@ QString Message::toString(){
     head.setNum(header);
     QString meth;
     meth.setNum(method);
-    return head + SEPARATOR + meth + SEPARATOR + body;
+    QString typ;
+    typ.setNum(type);
+    return head + SEPARATOR + meth + SEPARATOR + typ + SEPARATOR + body;
 
 }
 
