@@ -4,36 +4,42 @@
 #include "matrix.h"
 
 using namespace std;
-Graph::Graph(QString str)
+Graph::Graph()
 {
-    this->fileContent = str;
+    matrix = new Matrix<int>(1,1);
+}
+
+int* Graph::getNeighbours(int NodeNum){
+    int *n = matrix->getRow(NodeNum);
+    return n;
+}
+
+
+bool Graph::setGraphByString(QString fileContent){
 
 
     QStringList strMatrix = fileContent.split("|");
     QStringList strRow;
     size = strMatrix[0].split(" ").size();
-
-
-
     int** array = new int *[size];
     for (int i = 0; i < size; i++){
         array[i] = new int[size];
     }
 
     if ((size * size) != strMatrix.size()){
-        // ошибка
+        return false;
     }
 
     for(int row = 0; row < size; row++){
         strRow = strMatrix[row].split(" ");
         if (strRow.size() != size){
-            // ошибка
+            return false;
         }
         for(int column = 0; column < size; column++){
             bool ok;
             int digit = strRow[column].toInt(&ok, 10);
             if(!ok){
-                // ошибка
+                return false;
             }
             array[row][column] = digit;
         }
@@ -46,12 +52,7 @@ Graph::Graph(QString str)
         delete [] array[i];
     }
     delete [] array;
+    return true;
 }
-
-int* Graph::getNeighbours(int NodeNum){
-    int *n = matrix->getRow(NodeNum);
-    return n;
-}
-
 
 

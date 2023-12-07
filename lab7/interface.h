@@ -6,7 +6,6 @@
 #include<QGridLayout>
 #include<QPushButton>
 #include<QRadioButton>
-#include"canvas.h"
 #include"sample.h"
 #include<graph.h>
 
@@ -14,31 +13,38 @@ class Interface : public QWidget
 {
     Q_OBJECT
 
-    QGridLayout* mainGridLayout;
-
-
-
-
 
 public:
     Interface(QWidget *parent = nullptr);
+
     ~Interface();
     TSample* s;
     Graph *graph;
     void readFileToString();
     QString fileContent;
+    QPushButton *setFileButton = new QPushButton("Выберите файл", this);
+    QLineEdit* errorInfoLine = new QLineEdit(this);
+    QVBoxLayout* menuLayout;
+    QRect graphWindow;
     int MIN_WINDOW_SIZE = 400;
     int MAX_WINDOW_SIZE = 900;
-
-
-
-private:
-
+    bool isValidString();
     void parseStringToGraph();
-    void paintEvent(QPaintEvent*);
+
     void drawGraph();
+    void paintEvent(QPaintEvent*);
+
+
+
+
+
 
 public slots:
+    void openFileSystem();
+
+
+
+
 
 };
 #endif // INTERFACE_H

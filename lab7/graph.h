@@ -7,12 +7,13 @@
 class Graph
 {
 public:
-    Graph(QString str);
-    Matrix<int>* matrix;
-    QString fileContent;
-    int size;
+    Graph();
+    bool setGraphByString(QString);
     int* getNeighbours(int nodeNum);
+    int size;
+private:
 
+    Matrix<int>* matrix;
 };
 
 
