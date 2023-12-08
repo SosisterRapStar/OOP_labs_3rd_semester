@@ -11,46 +11,56 @@
 
 
 using namespace std;
-Interface::Interface(QWidget *parent)
+Interface::Interface(TSample sample, QWidget *parent)
     : QWidget(parent)
 {
-
+    s = sample;
     this->setWindowTitle("Матрица");
+
+
     setFixedSize(400, 400);
+
+
     errorInfoLine->setPlaceholderText("Нажмите для кнопку для выбора");
     errorInfoLine->setReadOnly(true);
 
-    setFileButton->setGeometry(QRect(100, 150, 200, 50));
-    errorInfoLine->setGeometry(QRect(100, 200, 200, 50));
+    setFileButton->setGeometry(QRect(0, 0, 150, 40));
+    errorInfoLine->setGeometry(QRect(0, 40, 150, 20));
 
-    connect(setFileButton,SIGNAL(pressed()),this, SLOT(openFileSystem()));
+    connect(setFileButton,SIGNAL(pressed()),this, SLOT(openGraph()));
 
     // настройка поля ответов
 //SLOTS:
 }
 
 
-void Interface::openFileSystem(){
+void Interface::openGraph(){ // Поиск файла и его отрктия
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open File"), "/", tr("TextFiles (*.txt)"));
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
-
     QTextStream in(&file);
 
+    QString fileContent = "";
+
+    // Парсинг файла в строку
     while (!in.atEnd()) {
         fileContent += in.readLine();
-        fileContent += '|';
-
+        fileContent += '|'; // разделяющая строка
     }
+
     graph = new Graph();
-    bool isValidGraph = graph->setGraphByString(fileContent);
+    bool isValidGraph = graph->setGraphByString(fileContent); // Принимает false если файл задан неверно
+
+
+
+
     if (isValidGraph){
         drawGraph();
     }
     else{
-        errorInfoLine->setText("Ошибка в формате графа внутри txt файла");
+        errorInfoLine->setText("Ошибка в формате");
         return;
     }
 
@@ -59,36 +69,36 @@ void Interface::openFileSystem(){
 
 
 
-void Interface::drawGraph(){
+void Interface::drawGraph(){ // функция регулирует изменение размера окна для графов разных размеров
 
-    float k = graph->size * 1/8;
-
+    float k = graph->getSize() * 1/5;
     int size = MIN_WINDOW_SIZE * k;
     if (size < MIN_WINDOW_SIZE){
-        graphWindow = QRect(5, 5, MIN_WINDOW_SIZE,MIN_WINDOW_SIZE);
+        setFixedSize(MIN_WINDOW_SIZE,MIN_WINDOW_SIZE);
 
     }
     else if (size > MAX_WINDOW_SIZE){
-        graphWindow = QRect(5, 5, MAX_WINDOW_SIZE,MAX_WINDOW_SIZE);
+        setFixedSize(MAX_WINDOW_SIZE,MAX_WINDOW_SIZE);
     }
     else{
-        graphWindow = QRect(5, 5, size,size);
-
+        setFixedSize(size,size);
     }
-    s = new TSample(graph);
+    s = TSample(graph);
     repaint();
 }
 
 void Interface::paintEvent(QPaintEvent*)
 {
+
     QPainter p;
     p.begin(this);
-    s->draw(&p, graphWindow);
+    s.draw(&p, rect());
     p.end();
 }
 
 
 
 Interface::~Interface(){
-
+    delete setFileButton;
+    delete errorInfoLine;
 }

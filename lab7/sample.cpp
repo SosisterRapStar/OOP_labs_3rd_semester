@@ -3,8 +3,12 @@
 
 TSample::TSample(Graph* graph)
 {
-    gSize=graph->size;
+    gSize=graph->getSize();
     this->graph = graph;
+}
+
+TSample::TSample(){
+    gSize = 0;
 }
 
 void TSample::draw(QPainter* pen, QRect window)
@@ -12,52 +16,24 @@ void TSample::draw(QPainter* pen, QRect window)
     p = pen;
     p->setRenderHint(QPainter::Antialiasing, true);
 
-
-
-    qreal NODE_RAD_PART = 5;
-    qreal MAIN_CIRCLE_COEFFICIENT = 0.350;
-
     centerX = 0.5 * window.width();
     centerY = 0.5 * window.right();
 
-    QPointF center;
-    center.setX(centerX);
-    center.setY(centerY);
+    QPointF center(centerX, centerY); // центр окружности
     qreal main_radius = MAIN_CIRCLE_COEFFICIENT * window.width();
     qreal mainCircleRadius = main_radius;
-
-    QPointF *nodePoints = new QPointF[gSize];
-
-
-    qreal angelD = 2*acos(-1)/gSize; // деление окружности на равные углы
+    qreal angelD = 2*acos(-1)/gSize;
     qreal angelNodeRadDelta = angelD / NODE_RAD_PART;
-
-
-
-    qreal curAng = 0;
-
-
     qreal nodeRad = centerY + main_radius * sin(angelNodeRadDelta) - centerY;
 
-
-
-
-
     p->setPen(QPen(Qt::black, 1, Qt::DashLine));
-
     p->drawEllipse(center, mainCircleRadius, mainCircleRadius);
-
-
     p->setFont(QFont("Arial", nodeRad));
-
-
-
-
     p->setPen(QPen(Qt::black, 2));
 
 
-
-
+    QPointF *nodePoints = new QPointF[gSize];
+    qreal curAng = 0;
     for(int i = 0; i < gSize; i++){
         nodePoints[i] = QPointF(centerX + main_radius * cos(curAng), centerY + main_radius * sin(curAng));
 
@@ -76,8 +52,9 @@ void TSample::draw(QPainter* pen, QRect window)
                 drawConnections(nodePoints[i], nodePoints[g], nodeRad);
             }
         }
-
     }
+
+
 }
 
 
@@ -96,10 +73,12 @@ void TSample::drawConnections(QPointF lowerNode, QPointF upperNode, qreal nodeRa
 
     qreal xDelta = cos(alfa) * nodeRad;
     qreal yDelta = sin(alfa) * nodeRad;
+
     if (alfa < 0){
         xDelta *= -1;
         yDelta *= -1;
     }
+
     lowerNode.setX(lowerNode.x() + xDelta);
     lowerNode.setY(lowerNode.y() - yDelta);
     upperNode.setX(upperNode.x() - xDelta);
@@ -108,11 +87,10 @@ void TSample::drawConnections(QPointF lowerNode, QPointF upperNode, qreal nodeRa
 
 
 
-
-    qreal upstepY = sin(alfa + acos(sqrt(2)/2)) * 7;
-    qreal upstepX = cos(alfa + acos(sqrt(2)/2)) * 7;
-    qreal downstepY = sin(alfa - acos(sqrt(2)/2)) * 7;
-    qreal downstepX = cos(alfa - acos(sqrt(2)/2)) * 7;
+    qreal upstepY = sin(alfa + arrowAngel) * arrowLength;
+    qreal upstepX = cos(alfa + arrowAngel) * arrowLength;
+    qreal downstepY = sin(alfa - arrowAngel) * arrowLength;
+    qreal downstepX = cos(alfa - arrowAngel) * arrowLength;
 
     if (alfa < 0){
         upstepY *= -1;
@@ -120,21 +98,21 @@ void TSample::drawConnections(QPointF lowerNode, QPointF upperNode, qreal nodeRa
         downstepY *= -1;
         downstepX *= -1;
     }
+
     if(!isSwaped){
         p->drawLine(upperNode, QPointF(upperNode.x() - upstepX, upperNode.y() + upstepY));
         p->drawLine(upperNode, QPointF(upperNode.x() - downstepX, upperNode.y() + downstepY));
     }
+
     else{
         swap(upperNode, lowerNode);
         p->drawLine(upperNode, QPointF(upperNode.x() + upstepX, upperNode.y() - upstepY));
         p->drawLine(upperNode, QPointF(upperNode.x() + downstepX, upperNode.y() - downstepY));
     }
-
-
-
-
-
 }
+
+
+
 
 //        qreal k =(lowerNode.y() - upperNode.y())/(upperNode.x() - lowerNode.x());
 //        qreal stepY = (tan(alfa) * stepX);

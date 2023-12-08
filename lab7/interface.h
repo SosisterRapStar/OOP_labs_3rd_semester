@@ -15,32 +15,27 @@ class Interface : public QWidget
 
 
 public:
-    Interface(QWidget *parent = nullptr);
+    Interface(TSample, QWidget *parent = nullptr);
 
     ~Interface();
-    TSample* s;
-    Graph *graph;
-    void readFileToString();
-    QString fileContent;
-    QPushButton *setFileButton = new QPushButton("Выберите файл", this);
-    QLineEdit* errorInfoLine = new QLineEdit(this);
-    QVBoxLayout* menuLayout;
-    QRect graphWindow;
-    int MIN_WINDOW_SIZE = 400;
-    int MAX_WINDOW_SIZE = 900;
-    bool isValidString();
-    void parseStringToGraph();
-
+    QPushButton *setFileButton = new QPushButton("Выберите файл", this); // кнопка для выбора файла
+    QLineEdit* errorInfoLine = new QLineEdit(this); // строка для отображения ошибки
     void drawGraph();
+
+private:
+    TSample s; // объект семпла
+    Graph *graph; // объект графа
+    int MIN_WINDOW_SIZE = 400; // минимальный размер окна
+    int MAX_WINDOW_SIZE = 900; // максимальный размер окна
     void paintEvent(QPaintEvent*);
 
 
 
 
-
-
 public slots:
-    void openFileSystem();
+    void openGraph();
+
+
 
 
 

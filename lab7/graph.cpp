@@ -7,11 +7,16 @@ using namespace std;
 Graph::Graph()
 {
     matrix = new Matrix<int>(1,1);
+    size = 1;
 }
 
 int* Graph::getNeighbours(int NodeNum){
     int *n = matrix->getRow(NodeNum);
     return n;
+}
+
+int Graph::getSize(){
+    return size;
 }
 
 
@@ -21,14 +26,18 @@ bool Graph::setGraphByString(QString fileContent){
     QStringList strMatrix = fileContent.split("|");
     QStringList strRow;
     size = strMatrix[0].split(" ").size();
+
+
     int** array = new int *[size];
     for (int i = 0; i < size; i++){
         array[i] = new int[size];
     }
 
-    if ((size * size) != strMatrix.size()){
+    if ((size) != strMatrix.size() - 1){
         return false;
     }
+
+
 
     for(int row = 0; row < size; row++){
         strRow = strMatrix[row].split(" ");
