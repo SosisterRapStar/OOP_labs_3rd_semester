@@ -3,7 +3,7 @@
 
 #include <QPainter>
 #include"graph.h"
-class TSample
+class GSample
 {
     int gSize;
     Graph* graph;
@@ -11,8 +11,8 @@ class TSample
     qreal centerX;
     qreal centerY;
 public:
-    TSample(Graph*);
-    TSample();
+    GSample(Graph*);
+    GSample();
 
     void draw(QPainter*,QRect);
     void drawConnections(QPointF, QPointF, qreal);

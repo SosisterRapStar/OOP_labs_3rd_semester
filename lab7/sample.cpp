@@ -1,17 +1,17 @@
 #include "sample.h"
 #include <math.h>
 
-TSample::TSample(Graph* graph)
+GSample::GSample(Graph* graph)
 {
     gSize=graph->getSize();
     this->graph = graph;
 }
 
-TSample::TSample(){
+GSample::GSample(){
     gSize = 0;
 }
 
-void TSample::draw(QPainter* pen, QRect window)
+void GSample::draw(QPainter* pen, QRect window)
 {
     p = pen;
     p->setRenderHint(QPainter::Antialiasing, true);
@@ -58,7 +58,7 @@ void TSample::draw(QPainter* pen, QRect window)
 }
 
 
-void TSample::drawConnections(QPointF lowerNode, QPointF upperNode, qreal nodeRad){
+void GSample::drawConnections(QPointF lowerNode, QPointF upperNode, qreal nodeRad){
 
     p->setPen(QPen(2));
     bool isSwaped = false;

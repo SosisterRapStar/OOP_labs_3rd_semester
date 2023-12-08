@@ -11,7 +11,7 @@
 
 
 using namespace std;
-Interface::Interface(TSample sample, QWidget *parent)
+Interface::Interface(GSample sample, QWidget *parent)
     : QWidget(parent)
 {
     s = sample;
@@ -83,7 +83,7 @@ void Interface::drawGraph(){ // функция регулирует измене
     else{
         setFixedSize(size,size);
     }
-    s = TSample(graph);
+    s = GSample(graph);
     repaint();
 }
 

@@ -15,7 +15,7 @@ class Interface : public QWidget
 
 
 public:
-    Interface(TSample, QWidget *parent = nullptr);
+    Interface(GSample, QWidget *parent = nullptr);
 
     ~Interface();
     QPushButton *setFileButton = new QPushButton("Выберите файл", this); // кнопка для выбора файла
@@ -23,7 +23,7 @@ public:
     void drawGraph();
 
 private:
-    TSample s; // объект семпла
+    GSample s; // объект семпла
     Graph *graph; // объект графа
     int MIN_WINDOW_SIZE = 400; // минимальный размер окна
     int MAX_WINDOW_SIZE = 900; // максимальный размер окна
