@@ -30,13 +30,15 @@ Interface::Interface(QWidget *parent)
     PhoneWindow* phone5 = new PhoneWindow(user5);
     PhoneWindow* phone6 = new PhoneWindow(user6);
 
-    PhoneWindow** phones = new PhoneWindow * [6];
-    phones[0] = phone1;
-    phones[1] = phone2;
-    phones[2] = phone3;
-    phones[3] = phone4;
-    phones[4] = phone5;
-    phones[5] = phone6;
+    QVector<PhoneWindow*> phones;
+
+    phones.push_back(phone1);
+    phones.push_back(phone2);
+    phones.push_back(phone3);
+    phones.push_back(phone4);
+    phones.push_back(phone5);
+    phones.push_back(phone6);
+
 
     ATE* ate = new ATE(phones);
 

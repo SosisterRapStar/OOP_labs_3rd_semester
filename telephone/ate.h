@@ -11,9 +11,9 @@ class ATE: public QObject
     Q_OBJECT
 public:
     ATE();
-    ATE(PhoneWindow**);
+    ATE(QVector<PhoneWindow*>);
     int connectionsNum;
-    PhoneWindow** subBase;
+    QVector<PhoneWindow*> subBase;
     void addSubscriber(PhoneWindow*);
 
 private:

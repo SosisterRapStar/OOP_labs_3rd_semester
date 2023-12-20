@@ -4,7 +4,7 @@
 PhoneWindow::PhoneWindow(Subscriber* user, QWidget *parent){
 //    this->sub = sub;
     this->user =user;
-    status = "sleep";
+    status = "бездействует";
 
     statusScreen->setReadOnly(true);
 
@@ -39,8 +39,8 @@ PhoneWindow::PhoneWindow(Subscriber* user, QWidget *parent){
     stopButton = new QPushButton("Сбросить");
     startCallButton = new QPushButton("Позвонить");
 
-    stopButton->setStyleSheet("color: white; background-color: red");
-    startButton->setStyleSheet("color: white; background-color: green");
+    stopButton->setStyleSheet("color: white; background-color: maroon");
+    startButton->setStyleSheet("color: white; background-color: darkGreen");
 
     buttons = new QHBoxLayout();
     buttons->addWidget(startButton);
@@ -77,26 +77,34 @@ void PhoneWindow::setStatus(QString newStatus){
     status = newStatus;
     if(newStatus == "вызов"){
         activeKeyboard(false);
+        stopButton->setStyleSheet("color: white; background-color: red");
+        startButton->setStyleSheet("color: white; background-color: green");
         startCallButton->setEnabled(false);
         numberScreen->setReadOnly(true);
     }
     else if(newStatus == "вызывает"){
         activeKeyboard(false);
         startCallButton->setEnabled(false);
+        stopButton->setStyleSheet("color: white; background-color: red");
+        startButton->setStyleSheet("color: white; background-color: darkGreen");
         startButton->setEnabled(false);
         numberScreen->setReadOnly(true);
     }
     else if(newStatus == "разговор"){
         messageScreen->setReadOnly(false);
+        stopButton->setStyleSheet("color: white; background-color: red");
+        startButton->setStyleSheet("color: white; background-color: darkGreen");
         activeKeyboard(false);
         startButton->setEnabled(false);
         startCallButton->setEnabled(false);
         numberScreen->setReadOnly(true);
     }
-    else if(newStatus == "sleep"){
+    else if(newStatus == "бездействует"){
         activeKeyboard(true);
         startButton->setEnabled(true);
+        stopButton->setStyleSheet("color: white; background-color: maroon");
         startCallButton->setEnabled(true);
+        startButton->setStyleSheet("color: white; background-color: green");
         stopButton->setEnabled(true);
         numberScreen->setReadOnly(false);
         messageScreen->setText("");

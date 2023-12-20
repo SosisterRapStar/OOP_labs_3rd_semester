@@ -8,11 +8,11 @@ ATE::ATE()
 }
 
 
-ATE::ATE(PhoneWindow** subBase){
+ATE::ATE(QVector<PhoneWindow*> subBase){
     NO_CONNECT_STATUSES << "вызывает" << "вызов" << "разговор";
     connectionsNum = 0;
     this->subBase = subBase;
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < subBase.size(); i++){
         connect(subBase[i], SIGNAL(call(PhoneWindow*, QString)), this, SLOT(connectTwoAbonents(PhoneWindow*, QString)));
         connect(subBase[i], SIGNAL(startSignal(PhoneWindow*)), this, SLOT(answerSignalSlot(PhoneWindow*))); // лишних проходов не будет
         // контрится статусом в самом окне телефона
@@ -26,7 +26,7 @@ ATE::ATE(PhoneWindow** subBase){
 //slot
 void ATE::connectTwoAbonents(PhoneWindow* firstPhone, QString secondPhoneNum){
     if (connectionsNum < CONNECTIONS_LIMIT){
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < subBase.size(); i++){
             if (subBase[i]->user->getNumber() == secondPhoneNum &&
                 !NO_CONNECT_STATUSES.contains(subBase[i]->getStatus())
                 && subBase[i] != firstPhone){
@@ -76,8 +76,8 @@ void ATE::disconnectSignalSlot(PhoneWindow* sub){
         if (sub == callingSubs[i]){
             connectionsNum--;
 
-            sub->setStatus("sleep");
-            waitingSubs[i]->setStatus("sleep");
+            sub->setStatus("бездействует");
+            waitingSubs[i]->setStatus("бездействует");
 
             callingSubs.remove(i);
             waitingSubs.remove(i);
@@ -86,8 +86,8 @@ void ATE::disconnectSignalSlot(PhoneWindow* sub){
         else if(sub == waitingSubs[i]){
             connectionsNum--;
 
-            sub->setStatus("sleep");
-            callingSubs[i]->setStatus("sleep");
+            sub->setStatus("бездействует");
+            callingSubs[i]->setStatus("бездействует");
 
 
             callingSubs.remove(i);
