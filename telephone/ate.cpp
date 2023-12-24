@@ -37,6 +37,11 @@ void ATE::connectTwoAbonents(PhoneWindow* firstPhone, QString secondPhoneNum){
                 callingSubs.push_back(firstPhone);
                 firstPhone->setStatus("вызывает");
                 subBase[i]->setStatus("вызов");
+                return;
+            }
+            else{
+                firstPhone->setMessage("занято");
+                return;
             }
         }
     }

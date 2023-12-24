@@ -10,7 +10,7 @@ PhoneWindow::PhoneWindow(Subscriber* user, QWidget *parent){
 
 
     numberScreen = new QLineEdit("", this);
-    mainInterface = new QVBoxLayout(this);
+    mainInterface = new QGridLayout(this);
 
     keyBoard = new QPushButton * [4];
     for(int i = 0; i < 4; i++){
@@ -31,9 +31,9 @@ PhoneWindow::PhoneWindow(Subscriber* user, QWidget *parent){
     }
 
 
-    mainInterface->addWidget(statusScreen);
-    mainInterface->addWidget(numberScreen);
-    mainInterface->addLayout(keys);
+    mainInterface->addWidget(statusScreen, 0, 0);
+    mainInterface->addWidget(numberScreen, 1, 0);
+    mainInterface->addLayout(keys, 2, 0);
 
     startButton = new QPushButton("Ответить");
     stopButton = new QPushButton("Сбросить");
@@ -46,11 +46,12 @@ PhoneWindow::PhoneWindow(Subscriber* user, QWidget *parent){
     buttons->addWidget(startButton);
     buttons->addWidget(startCallButton);
     buttons->addWidget(stopButton);
-    mainInterface->addLayout(buttons);
+    mainInterface->addLayout(buttons, 3, 0);
     messageScreen = new QLineEdit();
     messageScreen->setReadOnly(true);
+
     messageLay->addWidget(messageScreen, 0, 0, 5, 3);
-    mainInterface->addLayout(messageLay);
+    mainInterface->addLayout(messageLay, 4, 0, 6, 0);
 
     connect(messageScreen, SIGNAL(textChanged(QString)), this, SLOT(sendData(QString)));
 
@@ -104,7 +105,7 @@ void PhoneWindow::setStatus(QString newStatus){
         startButton->setEnabled(true);
         stopButton->setStyleSheet("color: white; background-color: maroon");
         startCallButton->setEnabled(true);
-        startButton->setStyleSheet("color: white; background-color: green");
+        startButton->setStyleSheet("color: white; background-color: darkGreen");
         stopButton->setEnabled(true);
         numberScreen->setReadOnly(false);
         messageScreen->setText("");

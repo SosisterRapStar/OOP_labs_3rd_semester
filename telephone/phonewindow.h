@@ -31,7 +31,7 @@ public:
     QPushButton** keyBoard;
     QHBoxLayout* buttons;
     ~PhoneWindow();
-    QVBoxLayout* mainInterface;
+    QGridLayout* mainInterface;
 
 
     void setMessage(QString);
